@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "sleep": "^6.3.0",
+    "sqlite3": "^5.1.2"
+  }
+}

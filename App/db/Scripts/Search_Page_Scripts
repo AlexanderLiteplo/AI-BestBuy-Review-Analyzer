@@ -1,0 +1,147 @@
+import sqlite3
+import random
+# user makes a search
+# new search is made
+# searchID is made for search
+# in the background apis are called and
+# review and product tables are populated with new data
+# then front end API calls this query
+def get_product_from_search_noFilters(searchID):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT P.productID, P.name, P.price, AVG(A.score), R.score
+                FROM Product P, AmazonReview A, AIReview R
+                WHERE P.searchID = {searchID}
+                AND A.productID = P.productID
+                AND A.productID = P.productId"""
+    
+    crsr.execute(qry)
+    
+    data = crsr.fetchall()
+    
+    connection.commit()
+    
+    connection.close()
+    
+    return data
+
+# Selects the top X entries
+def get_product_from_search_noFilters_top(searchID, top):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT P.productID, P.name, P.price, AVG(A.score), R.score
+                FROM Product P, AmazonReview A, AIReview R
+                WHERE P.searchID = {searchID}
+                AND A.productID = P.productID
+                AND A.productID = P.productId
+                LIMIT {top}"""
+    
+    crsr.execute(qry)
+    
+    data = crsr.fetchall()
+    
+    connection.commit()
+    
+    connection.close()
+    
+    return data
+
+# user to not filter on price but sort by rating
+def get_product_from_search_noFilters_Ordered(searchID):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT P.productID, P.name, P.price, AVG(A.score), R.score
+                FROM Product P, AmazonReview A, AIReview R
+                WHERE P.searchID = {searchID}
+                AND A.productID = P.productID
+                AND A.productID = P.productId
+                ORDER BY R.score DESC"""
+    
+    crsr.execute(qry)
+    
+    data = crsr.fetchall()
+    
+    connection.commit()
+    
+    connection.close()
+    
+    return data
+
+def get_product_from_search_filterOn_Price(searchID, maxPrice):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT P.productID, P.name, P.price, AVG(A.score), R.score
+                FROM Product P, AmazonReview A, AIReview R
+                WHERE P.searchID = {searchID}
+                AND A.productID = P.productID
+                AND A.productID = P.productId
+                AND P.price <= {maxPrice}"""
+    
+    crsr.execute(qry)
+    
+    data = crsr.fetchall()
+    
+    connection.commit()
+    
+    connection.close()
+    
+    return data
+
+# Use to sort by Rating and also filter on price
+def get_product_from_search_filterOn_Price_Ordered(searchID, maxPrice):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT P.productID, P.name, P.price, AVG(A.score), R.score
+                FROM Product P, AmazonReview A, AIReview R
+                WHERE P.searchID = {searchID}
+                AND A.productID = P.productID
+                AND A.productID = P.productId
+                AND P.price <= {maxPrice}
+                ORDER BY R.score DESC"""
+    
+    crsr.execute(qry)
+    
+    data = crsr.fetchall()
+    
+    connection.commit()
+    
+    connection.close()
+    
+    return data
+
+def add_product_to_cart(username,
+            productID):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""INSERT INTO User(userName,
+                                loginID,
+                                password,
+                                advertisementID,
+                                postalCode,
+                                address,
+                                city,
+                                country) 
+                VALUES(\'{username}\',
+                        \'{logInId}\',
+                        \'{password}\',
+                        {advertisementID},
+                        \'{postalCode}\',
+                        \'{address}\',
+                        \'{city}\',
+                        \'{country}\')"""
+
+for i in get_product_from_search_noFilters(1):
+    print(i)
+

@@ -1,0 +1,123 @@
+import sqlite3
+import random
+# Updates fields: password address postalcode city country
+# For account with specified username
+def update_user(username, password, address, postalcode, city, country):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""UPDATE User 
+                SET password = \'{password}\', 
+                    postalCode = \'{postalcode}\',
+                    address = \'{address}\',
+                    city = \'{city}\',
+                    country = \'{country}\'
+                WHERE username = \'{username}\'"""
+    
+    crsr.execute(qry)
+    
+    connection.commit()
+    
+    connection.close()
+    
+    
+
+def delete_user(username):
+    
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""DELETE FROM User WHERE username = \'{username}\'"""
+    
+    crsr.execute(qry)
+    
+    connection.commit()
+    
+    connection.close()
+
+
+def print_user(username):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""SELECT * FROM User WHERE username = \'{username}\'"""
+    
+    crsr.execute(qry)
+    
+    for i in crsr.fetchall():
+        print(i)
+    
+    connection.commit()
+    
+    connection.close()
+    
+def add_user(username,
+            logInId, 
+            password,
+            advertisementID, 
+            postalCode,
+            address,
+            city,
+            country):
+    connection = sqlite3.connect("ProjectScripts.db")
+    
+    crsr = connection.cursor()
+    
+    qry = f"""INSERT INTO User(userName,
+                                loginID,
+                                password,
+                                advertisementID,
+                                postalCode,
+                                address,
+                                city,
+                                country) 
+                VALUES(\'{username}\',
+                        \'{logInId}\',
+                        \'{password}\',
+                        {advertisementID},
+                        \'{postalCode}\',
+                        \'{address}\',
+                        \'{city}\',
+                        \'{country}\')"""
+    
+    
+    crsr.execute(qry)
+    
+    cartNumber = random.randint(0,10000000)
+    
+    qry = f"""INSERT INTO Cart(cartID, username)
+                VALUES({cartNumber}, \'{username}\')"""
+    
+    print(qry)
+    
+    crsr.execute(qry)
+    
+    connection.commit()
+    
+    connection.close()
+
+  
+#for testing purposes:
+update_user('xanderminer',
+ 'Password',
+ 'new address',
+ 'new postal code',
+ 'new city',
+ 'new country')
+
+print_user('xanderminer')
+add_user("username",
+            "logInId", 
+            "password",
+            2, 
+            "postalCode",
+            "address",
+            "city",
+            "country")
+
+print_user('username')
+
+delete_user('username')
